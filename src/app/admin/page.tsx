@@ -69,15 +69,20 @@ export default function AdminPage() {
     }
 
     try {
-      const success = await deleteUser(userId);
+      // Admin API를 사용하여 사용자 삭제 (Auth와 프로필 모두 삭제)
+      const { deleteUserWithAdminAPI } = await import('@/lib/admin-actions');
+      const success = await deleteUserWithAdminAPI(userId);
+      
       if (success) {
         // 사용자 목록 새로고침
         const updatedUsers = await getAllUsers();
         setUsers(updatedUsers);
+        alert('사용자가 성공적으로 삭제되었습니다.');
       } else {
         setError('삭제에 실패했습니다.');
       }
     } catch (err) {
+      console.error('Delete error:', err);
       setError(err instanceof Error ? err.message : '삭제 중 오류가 발생했습니다.');
     }
   };

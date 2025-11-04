@@ -124,6 +124,50 @@ export async function createUserWithAdminAPI(
   return { user: authData.user };
 }
 
+// Admin API를 사용하여 사용자 삭제
+export async function deleteUserWithAdminAPI(userId: string): Promise<boolean> {
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!serviceRoleKey) {
+    throw new Error('서버 설정 오류: SUPABASE_SERVICE_ROLE_KEY가 필요합니다.');
+  }
+
+  const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    serviceRoleKey,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
+  );
+
+  try {
+    // 1. Auth에서 사용자 삭제 (이것이 profiles도 함께 삭제함)
+    const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(userId);
+    
+    if (deleteError) {
+      console.error('Error deleting user from auth:', deleteError);
+      // Auth 삭제가 실패하면 프로필만 삭제 시도
+      const { error: profileDeleteError } = await supabaseAdmin
+        .from('profiles')
+        .delete()
+        .eq('id', userId);
+      
+      if (profileDeleteError) {
+        console.error('Error deleting profile:', profileDeleteError);
+        return false;
+      }
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error in deleteUserWithAdminAPI:', error);
+    return false;
+  }
+}
+
 // 일괄 사용자 생성 (Admin API 사용)
 export async function createBulkUsersWithAdminAPI(
   users: Array<{ email: string; username: string; name: string; password: string }>
@@ -131,8 +175,7 @@ export async function createBulkUsersWithAdminAPI(
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   
   if (!serviceRoleKey) {
-    console.error('SUPABASE_SERVICE_ROLE_KEY가 설정되지 않았습니다.');
-    throw new Error('서버 설정 오류: SUPABASE_SERVICE_ROLE_KEY가 필요합니다. README를 참고하세요.');
+    throw new Error('서버 설정 오류: SUPABASE_SERVICE_ROLE_KEY가 필요합니다.');
   }
 
   const supabaseAdmin = createClient(
@@ -243,4 +286,3 @@ export async function createBulkUsersWithAdminAPI(
 
   return results;
 }
-
