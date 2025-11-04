@@ -31,23 +31,30 @@ export default function AdminPage() {
   useEffect(() => {
     async function init() {
       try {
-        const [usersData, user] = await Promise.all([
-          getAllUsers(),
-          getCurrentUser(),
-        ]);
+        const user = await getCurrentUser();
+        
+        // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+        if (!user) {
+          router.push('/login');
+          return;
+        }
 
         // 관리자 권한 확인
         const adminCheck = await isAdmin();
         if (!adminCheck) {
+          // 권한이 없는 경우 홈으로 리다이렉트
           router.push('/');
           return;
         }
 
+        // 관리자인 경우 사용자 목록 로드
+        const usersData = await getAllUsers();
         setUsers(usersData);
         setCurrentUser(user);
       } catch (err) {
         console.error('Error loading admin data:', err);
         setError('데이터를 불러오는 중 오류가 발생했습니다.');
+        router.push('/login');
       } finally {
         setLoading(false);
       }

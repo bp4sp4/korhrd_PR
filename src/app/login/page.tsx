@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { signIn, signUp } from '@/lib/auth';
+import { signIn, signUp, getCurrentUser, isAdmin } from '@/lib/auth';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -33,7 +33,21 @@ export default function LoginPage() {
         setIsSignUp(false);
       } else {
         await signIn(email, password);
-        router.push('/');
+        
+        // 로그인 후 사용자 정보 확인
+        const user = await getCurrentUser();
+        if (user) {
+          // 관리자인 경우 관리자 페이지로 리다이렉트
+          const adminCheck = await isAdmin();
+          if (adminCheck) {
+            router.push('/admin');
+          } else {
+            // 일반 사용자는 홈으로
+            router.push('/');
+          }
+        } else {
+          router.push('/');
+        }
         router.refresh();
       }
     } catch (err: any) {
