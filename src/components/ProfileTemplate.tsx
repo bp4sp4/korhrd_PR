@@ -3,23 +3,39 @@
 import Image from 'next/image';
 import { User } from '@/types/user';
 import Link from 'next/link';
-import { canEdit } from '@/lib/auth';
+import { canEdit, getCurrentUser, signOut } from '@/lib/auth';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface ProfileTemplateProps {
   user: User;
 }
 
 export default function ProfileTemplate({ user }: ProfileTemplateProps) {
+  const router = useRouter();
   const [canEditProfile, setCanEditProfile] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     async function checkPermission() {
+      const currentUser = await getCurrentUser();
+      setIsLoggedIn(currentUser !== null);
+      
       const canEditResult = await canEdit(user.username);
       setCanEditProfile(canEditResult);
     }
     checkPermission();
   }, [user.username]);
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      router.push('/');
+      router.refresh();
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-gray-50">
@@ -40,6 +56,22 @@ export default function ProfileTemplate({ user }: ProfileTemplateProps) {
                   className="rounded-full bg-blue-600 px-6 py-2 text-sm font-medium text-white transition-all hover:bg-blue-700 hover:shadow-lg"
                 >
                   편집
+                </Link>
+              )}
+              {isLoggedIn && (
+                <button
+                  onClick={handleLogout}
+                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                >
+                  로그아웃
+                </button>
+              )}
+              {!isLoggedIn && (
+                <Link
+                  href="/login"
+                  className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                >
+                  로그인
                 </Link>
               )}
             </div>

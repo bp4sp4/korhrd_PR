@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getUserByUsername } from '@/lib/users';
-import { canEdit } from '@/lib/auth';
+import { canEdit, signOut } from '@/lib/auth';
 import { updateUserProfileWithAuth } from '@/lib/profile-actions';
 import { UserProfileData } from '@/types/user';
 
@@ -31,12 +31,28 @@ export default function EditPage({ params }: EditPageProps) {
       const userUsername = resolvedParams.username;
       setUsername(userUsername);
 
-      // 먼저 로그인 확인
+      // 세션을 명시적으로 확인 (로그인 상태 엄격하게 체크)
+      const { createClient } = await import('@/lib/supabase/client');
+      const supabase = createClient();
+      
+      // 세션 확인
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      // 세션이 없거나 유효하지 않은 경우
+      if (sessionError || !session || !session.user) {
+        // 로그아웃 처리 후 로그인 페이지로 리다이렉트
+        await supabase.auth.signOut();
+        router.push('/login');
+        return;
+      }
+
+      // 사용자 정보 확인
       const { getCurrentUser } = await import('@/lib/auth');
       const currentUser = await getCurrentUser();
       
       if (!currentUser) {
-        // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+        // 사용자 정보를 가져올 수 없는 경우 로그인 페이지로 리다이렉트
+        await supabase.auth.signOut();
         router.push('/login');
         return;
       }
@@ -99,12 +115,28 @@ export default function EditPage({ params }: EditPageProps) {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-gray-50">
       <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-sm">
         <div className="mx-auto max-w-6xl px-4 py-4">
-          <Link
-            href={`/user/${username}`}
-            className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            ← 돌아가기
-          </Link>
+          <div className="flex items-center justify-between">
+            <Link
+              href={`/user/${username}`}
+              className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              ← 돌아가기
+            </Link>
+            <button
+              onClick={async () => {
+                try {
+                  await signOut();
+                  router.push('/');
+                  router.refresh();
+                } catch (err) {
+                  console.error('Logout error:', err);
+                }
+              }}
+              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+            >
+              로그아웃
+            </button>
+          </div>
         </div>
       </nav>
 
