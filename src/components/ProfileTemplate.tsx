@@ -42,13 +42,8 @@ export default function ProfileTemplate({ user }: ProfileTemplateProps) {
       {/* 상단 네비게이션 */}
       <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-sm">
         <div className="mx-auto max-w-6xl px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link
-              href="/"
-              className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              ← 홈
-            </Link>
+          <div className="flex items-end justify-end">
+         
             <div className="flex items-center gap-4">
               {canEditProfile && (
                 <Link

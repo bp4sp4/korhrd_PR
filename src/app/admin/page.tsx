@@ -537,6 +537,7 @@ export default function AdminPage() {
                       <div className="flex gap-2">
                         <Link
                           href={`/user/${user.username}`}
+                          target="_blank"
                           className="rounded px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 transition-colors"
                         >
                           보기
