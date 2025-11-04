@@ -58,21 +58,14 @@ export default function ProfileTemplate({ user }: ProfileTemplateProps) {
                   편집
                 </Link>
               )}
-              {isLoggedIn && (
+              {/* 본인의 프로필을 볼 때만 로그아웃 버튼 표시 */}
+              {isLoggedIn && canEditProfile && (
                 <button
                   onClick={handleLogout}
                   className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
                 >
                   로그아웃
                 </button>
-              )}
-              {!isLoggedIn && (
-                <Link
-                  href="/login"
-                  className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-                >
-                  로그인
-                </Link>
               )}
             </div>
           </div>
