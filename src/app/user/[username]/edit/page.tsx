@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getUserByUsername, updateUserProfileByUsername } from '@/lib/users';
+import { getUserByUsername } from '@/lib/users';
 import { canEdit } from '@/lib/auth';
+import { updateUserProfileWithAuth } from '@/lib/profile-actions';
 import { UserProfileData } from '@/types/user';
 
 interface EditPageProps {
@@ -30,9 +31,20 @@ export default function EditPage({ params }: EditPageProps) {
       const userUsername = resolvedParams.username;
       setUsername(userUsername);
 
-      // 권한 확인
+      // 먼저 로그인 확인
+      const { getCurrentUser } = await import('@/lib/auth');
+      const currentUser = await getCurrentUser();
+      
+      if (!currentUser) {
+        // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+        router.push('/login');
+        return;
+      }
+
+      // 권한 확인 (본인 또는 관리자만 수정 가능)
       const canEditResult = await canEdit(userUsername);
       if (!canEditResult) {
+        // 권한이 없는 경우 프로필 페이지로 리다이렉트
         router.push(`/user/${userUsername}`);
         return;
       }
@@ -60,7 +72,8 @@ export default function EditPage({ params }: EditPageProps) {
     setError('');
 
     try {
-      await updateUserProfileByUsername(username, formData);
+      // 서버 측 권한 확인 후 업데이트
+      await updateUserProfileWithAuth(username, formData);
       
       // 페이지 새로고침하여 변경사항 반영
       router.push(`/user/${username}`);
