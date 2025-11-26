@@ -1,6 +1,4 @@
 'use client';
-
-import { useState, useEffect, useRef } from 'react';
 import { ProfileTemplate } from '@/types/template';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -11,35 +9,8 @@ interface TemplateViewProps {
 }
 
 export default function TemplateView({ template }: TemplateViewProps) {
-  const [showFloatingMenu, setShowFloatingMenu] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      // pageContainer의 위치를 기준으로 스크롤 계산
-      if (!containerRef.current) return;
-      
-      const containerRect = containerRef.current.getBoundingClientRect();
-      const scrollPosition = window.scrollY || document.documentElement.scrollTop;
-      const containerTop = containerRect.top + scrollPosition;
-      const headerHeight = 550;
-      
-      // 헤더를 지나면 플로팅 메뉴 표시
-      setShowFloatingMenu(scrollPosition > containerTop + headerHeight);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll);
-    handleScroll(); // 초기 상태 확인
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-    };
-  }, []);
-
   return (
-    <div className={styles.pageContainer} ref={containerRef}>
+    <div className={styles.pageContainer}>
       <header 
         className={styles.header}
         style={template.heroImage ? {
@@ -118,7 +89,12 @@ export default function TemplateView({ template }: TemplateViewProps) {
         {template.sections && template.sections.length > 0 && (
           <section className={styles.consultationSection}>
             <div className={styles.consultationTitle}>
-              <h1 className={styles.consultationTitleText}>{template.name}이<br/>컨설팅 해드려요</h1>
+              <h1 
+                className={styles.consultationTitleText}
+                dangerouslySetInnerHTML={{ 
+                  __html: template.sectionTitle || `${template.name}이<br/>컨설팅 해드려요` 
+                }}
+              />
               {template.sections.map((section) => (
                 <div key={section.id}>
                   <p className={styles.consultationItemTitle}>{section.title}</p>
@@ -287,8 +263,8 @@ export default function TemplateView({ template }: TemplateViewProps) {
         </div>
       </section>
 
-      {/* 플로팅 메뉴 - 헤더를 지나고 나서부터 표시 (pageContainer 내부) */}
-      {showFloatingMenu && (template.kakaoLink || template.phoneLink) && (
+      {/* 플로팅 메뉴 */}
+      {(template.kakaoLink || template.phoneLink) && (
         <div className={styles.floatingMenu}>
           {template.kakaoLink && (
             <a

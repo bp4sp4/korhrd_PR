@@ -67,6 +67,7 @@ function templateToProfileTemplate(template: any): ProfileTemplate {
           ? template.footer2_buttons 
           : JSON.parse(template.footer2_buttons || '[]'))
       : null,
+    sectionTitle: template.section_title || null,
     verified: template.verified || false,
     createdAt: template.created_at || new Date().toISOString(),
     updatedAt: template.updated_at || new Date().toISOString(),
@@ -274,6 +275,7 @@ export async function createTemplate(data: CreateTemplateData): Promise<ProfileT
       footer_checklist_items: data.footerChecklistItems ? JSON.stringify(data.footerChecklistItems) : null,
       footer2_title: data.footer2Title || null,
       footer2_buttons: data.footer2Buttons ? JSON.stringify(data.footer2Buttons) : null,
+      section_title: data.sectionTitle || null,
       verified: data.verified || false,
     })
     .select()
@@ -312,6 +314,7 @@ export async function updateTemplate(
   if (data.footerChecklistItems !== undefined) updateData.footer_checklist_items = data.footerChecklistItems ? JSON.stringify(data.footerChecklistItems) : null;
   if (data.footer2Title !== undefined) updateData.footer2_title = data.footer2Title;
   if (data.footer2Buttons !== undefined) updateData.footer2_buttons = data.footer2Buttons ? JSON.stringify(data.footer2Buttons) : null;
+  if (data.sectionTitle !== undefined) updateData.section_title = data.sectionTitle;
   if (data.verified !== undefined) updateData.verified = data.verified;
 
   const { data: templateData, error } = await supabase

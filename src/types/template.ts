@@ -24,6 +24,7 @@ export interface ProfileTemplate {
   footerChecklistItems: string[] | null;
   footer2Title: string | null;
   footer2Buttons: Footer2Button[] | null;
+  sectionTitle: string | null;
   verified: boolean;
   createdAt: string;
   updatedAt: string;
@@ -76,6 +77,7 @@ export interface CreateTemplateData {
   footerChecklistItems?: string[];
   footer2Title?: string;
   footer2Buttons?: Footer2Button[];
+  sectionTitle?: string;
   verified?: boolean;
 }
 
@@ -92,6 +94,7 @@ export interface UpdateTemplateData {
   footerChecklistItems?: string[];
   footer2Title?: string;
   footer2Buttons?: Footer2Button[];
+  sectionTitle?: string;
   verified?: boolean;
 }
 

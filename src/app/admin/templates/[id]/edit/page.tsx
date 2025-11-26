@@ -46,6 +46,7 @@ export default function EditTemplatePage() {
     footerChecklistItems: ['1:1 개인별 맞춤 안내가 들어가요.', '원하는 일정에 맞춰 연락드려요.', '성적관리 확실히 도와드려요.'],
     footer2Title: '',
     footer2Buttons: [] as Array<{ type: 'kakao' | 'phone' | 'blog' | 'instagram'; label: string; url: string }>,
+    sectionTitle: '',
     verified: false,
   });
   const [newIntroItem, setNewIntroItem] = useState({ emoji: '', text: '' });
@@ -96,6 +97,7 @@ export default function EditTemplatePage() {
           footerChecklistItems: fullTemplate.footerChecklistItems || ['1:1 개인별 맞춤 안내가 들어가요.', '원하는 일정에 맞춰 연락드려요.', '성적관리 확실히 도와드려요.'],
           footer2Title: fullTemplate.footer2Title || '',
           footer2Buttons: fullTemplate.footer2Buttons || [],
+          sectionTitle: fullTemplate.sectionTitle || '',
           verified: fullTemplate.verified,
         });
       } catch (err) {
@@ -171,6 +173,7 @@ export default function EditTemplatePage() {
         introItems: formData.introItems.length > 0 ? formData.introItems : undefined,
         footerChecklistItems: formData.footerChecklistItems.filter(item => item.trim() !== ''),
         footer2Buttons: formData.footer2Buttons.length > 0 ? formData.footer2Buttons : undefined,
+        sectionTitle: formData.sectionTitle || undefined,
       });
       setTemplate({ ...template, ...updated });
       alert('템플릿 정보가 저장되었습니다.');
@@ -730,6 +733,18 @@ export default function EditTemplatePage() {
         <div className="mb-8 rounded-2xl bg-white p-6 shadow-lg border border-gray-100">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">섹션 관리</h2>
           
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">섹션 전체 제목</label>
+            <input
+              type="text"
+              value={formData.sectionTitle}
+              onChange={(e) => setFormData({ ...formData, sectionTitle: e.target.value })}
+              placeholder="예: 학습담당자 민서쌤이 컨설팅 해드려요"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <p className="mt-1 text-xs text-gray-500">줄바꿈은 &lt;br/&gt; 태그를 사용하세요</p>
+          </div>
+          
           <div className="mb-4 flex gap-2">
             <input
               type="text"
@@ -1038,6 +1053,7 @@ export default function EditTemplatePage() {
                       footerChecklistItems: formData.footerChecklistItems || template.footerChecklistItems,
                       footer2Title: formData.footer2Title || template.footer2Title,
                       footer2Buttons: formData.footer2Buttons.length > 0 ? formData.footer2Buttons : template.footer2Buttons,
+                      sectionTitle: formData.sectionTitle || template.sectionTitle,
                       verified: formData.verified,
                       sections: template.sections,
                       footerItems: template.footerItems,

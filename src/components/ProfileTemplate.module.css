@@ -1,13 +1,13 @@
 
 .pageContainer {
-  width: 473px;
+  width: 360px;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  margin-top: 30px;
-  border: 14px solid #e0e0e0;
-  border-radius: 60px;
-  background-color: #9c9c9c;
+  
+  border: none;
+  
+  
   padding: 0;
   box-sizing: border-box;
   overflow: hidden;
@@ -30,7 +30,7 @@
   width: 100%;
   height: 550px;
   box-sizing: border-box;
-  border-radius: 46px 46px 0 0;
+  
 }
 
 .headerButtons{
@@ -145,12 +145,12 @@
   align-items: center;
   justify-content: center;
   font-weight: 900;
-  padding: 60px 0;
+  padding: 30px 22px;
   background-color : #fffbee;
 }
 
 .contentsTitleText{
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   display: flex;
   align-items: center;
   color : #121212;
@@ -182,10 +182,10 @@ color : #121212;
 }
 
 .introMessage {
-  font-size: 1rem;
+  font-size: 14px;
   text-align: center;
   color: #121212;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.6;
   margin-bottom: 10px;
 }
@@ -219,7 +219,7 @@ color : #121212;
 }
 
 .phoneNumber {
-  font-size: 1.1rem;
+  font-size: 14px;
   font-weight: bold;
   text-align: center;
   color: #121212;
@@ -322,9 +322,12 @@ color : #121212;
 
 .consultationTitle{
   font-weight: 900;
-  padding: 40px;
+  padding: 0 20px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  
   font-size: 1.6rem;
-  background-color : #f0edfa;
+  background-color : #f5f5f5;
 }
 
 
@@ -332,6 +335,7 @@ color : #121212;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  
 }
 
 .consultationItem{
@@ -341,19 +345,20 @@ color : #121212;
 }
 
 .consultationItemTitle{
-  font-size: 1.4rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: #0084ff  ;
-  margin-top: 25px;
+  color: #0084ff;
+  margin-top: 20px;
+  margin-bottom: 10px;
   display: flex;
 }
 
 .consultationItemContentContainer{
   display: flex;
   flex-direction: row;
-  gap: 10px;
   flex-wrap: wrap;
-  margin-top: 10px;
+  
+
 }
 
 .consultationItemContent{
@@ -361,11 +366,11 @@ color : #121212;
   justify-content: center;
   align-items: center;
   margin: 3px;
-  font-size: 1rem;
+  font-size: 14px;
   font-weight: 500;
   color: #121212;
-  width: 170px;
-  height: 40px;
+  width: 154px;
+  height: 44px;
   font-weight: 700;
   background-color: #ffffff;
   border-radius: 10px;
@@ -374,7 +379,8 @@ color : #121212;
 }
 
 .consultstudySection{
-  padding:20px 40px;
+  margin-top: 60px;
+  margin-left: 22px;
   
 }
 
@@ -474,15 +480,15 @@ color : #121212;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding-top: 60px;
+  padding-bottom: 60px;
   background-image: url('/background_image_footer.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 .qnaTitle{
-  font-size: 1.5rem;
+  font-size: 20px;
   font-weight: 700;
   color: #000;
   margin-top: 10px;
@@ -490,14 +496,14 @@ color : #121212;
 }
 
 .qnaContentItem{
- margin-top: 20px;
+ margin-top: 12px;
  
 }
 .qnaContentItemText{
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 14px;
   font-weight: 500;
   padding: 5px 0;
   gap: 5px;
@@ -577,7 +583,6 @@ color : #121212;
 .qnaIcon{
   width: 20px;
   height: 20px;
-
   object-fit: contain;
   display: flex;
   align-items: center;
@@ -586,36 +591,36 @@ color : #121212;
 
 /* Footer2 섹션 */
 .footer2Section {
-  padding: 40px;
+  padding: 50px 22px;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
-    
-  gap: 24px;
+  height: 100%;
+  gap: 10px;
 }
 
 .footer2Title {
   font-size: 1.3rem;
   font-weight: 700;
   color: #121212;
-  
   margin: 0;
 }
 
 .footer2Buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  width: 100%;
-  max-width: 400px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  
+  
 }
 
 .footer2Button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 16px;
+ width: 154px;
+ height: 44px;
   border-radius: 12px;
   text-decoration: none;
   font-weight: 600;
@@ -691,7 +696,7 @@ color : #121212;
 /* 플로팅 메뉴 */
 .floatingMenu {
   position: fixed;
-  right: calc(50vw - 236.5px + 20px);
+  right: calc(54vw - 236.5px + 20px);
   top: 50vh;
   transform: translateY(-50%);
   display: flex;
