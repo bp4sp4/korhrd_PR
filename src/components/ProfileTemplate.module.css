@@ -1,7 +1,7 @@
 
 .pageContainer {
-  width: 360px;
   width: 100%;
+  max-width: 360px;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
@@ -37,7 +37,7 @@
   align-items: center;
   padding: 0 40px;
   box-sizing: border-box;
-  margin-top: 30px;
+  margin-top: 0;
 }
 .uploadButton {
   width: 30px;

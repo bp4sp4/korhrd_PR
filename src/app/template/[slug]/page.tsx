@@ -14,7 +14,11 @@ export default async function TemplatePage({ params }: TemplatePageProps) {
     notFound();
   }
 
-  return <TemplateView template={template} />;
+  return (
+    <div style={{ margin: 0, padding: 0 }}>
+      <TemplateView template={template} />
+    </div>
+  );
 }
 
 export async function generateMetadata({ params }: TemplatePageProps) {
