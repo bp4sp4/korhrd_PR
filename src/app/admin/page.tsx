@@ -215,6 +215,12 @@ export default function AdminPage() {
             </div>
             <div className="flex gap-4">
               <Link
+                href="/admin/templates"
+                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+              >
+                템플릿 관리
+              </Link>
+              <Link
                 href="/"
                 className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
               >

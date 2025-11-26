@@ -11,6 +11,7 @@
   padding: 0;
   box-sizing: border-box;
   overflow: hidden;
+  position: relative;
 }
 
 /* Header Section */
@@ -145,14 +146,22 @@
   justify-content: center;
   font-weight: 900;
   padding: 60px 0;
-
+  background-color : #fffbee;
 }
 
 .contentsTitleText{
   font-size: 1.6rem;
   display: flex;
   align-items: center;
+  color : #121212;
   gap: 8px;
+  margin-bottom: 10px;
+}
+
+.consultationTitleText {
+font-size: 1.5rem;
+font-weight: bold;
+color : #121212;
 }
 
 .contentsTitleDescription{
@@ -160,6 +169,61 @@
   text-align: center;
   margin-top: 15px;
   font-weight: 500;
+}
+
+/* 설명 섹션 */
+.introSection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px 40px;
+  
+}
+
+.introMessage {
+  font-size: 1rem;
+  text-align: center;
+  color: #121212;
+  font-weight: 700;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.introItems {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  
+  
+}
+
+.introItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 12px;
+  color: #333333;
+}
+
+.introItemEmoji {
+  font-size: 1.2rem;
+  min-width: 24px;
+  text-align: center;
+}
+
+.introItemText {
+  text-align: center;
+  line-height: 1.5;
+}
+
+.phoneNumber {
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: center;
+  color: #121212;
+  margin-top: 10px;
 }
 
 .starIcon {
@@ -239,7 +303,7 @@
   width: 150px;
   height: 50px;
   border-radius: 10px;
-  background-color: rgb(99, 179, 99);
+  background-color: #00BF16;
   color: #fff;
   font-size: 1rem;
   font-weight: 700;
@@ -279,7 +343,7 @@
 .consultationItemTitle{
   font-size: 1.4rem;
   font-weight: 700;
-  color: #2b7fff;
+  color: #0084ff  ;
   margin-top: 25px;
   display: flex;
 }
@@ -299,12 +363,14 @@
   margin: 3px;
   font-size: 1rem;
   font-weight: 500;
-  color: #fff;
+  color: #121212;
   width: 170px;
   height: 40px;
   font-weight: 700;
-  background-color: #2b7fff;
+  background-color: #ffffff;
   border-radius: 10px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .consultstudySection{
@@ -313,8 +379,8 @@
 }
 
 .consultationTitleImage{
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   object-fit: contain;
 }
 
@@ -330,6 +396,19 @@
   font-weight: 700;
   color: #000;
   margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footerItemEmoji {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  font-size: 60px;
+  line-height: 1;
+  text-align: center;
+  flex-shrink: 0;
 }
 
 .consultstudyTitleDescription{
@@ -342,6 +421,12 @@
 .swiperContainer {
   width: 100%;
   padding: 10px 0;
+  overflow: visible;
+}
+
+.swiperContainer :global(.swiper-wrapper) {
+  display: flex;
+  align-items: stretch;
 }
 
 .swiperContainer :global(.swiper-slide) {
@@ -350,13 +435,38 @@
   align-items: center;
   height: auto;
   width: auto;
+  flex-shrink: 0;
 }
 
 .swiperImage{
   width: 100%;
-  height: 200px;
-  object-fit: contain;
+  height: 345px;
+  object-fit: cover;
   border-radius: 10px;
+  display: block;
+}
+
+.swiperContainer :global(.swiper-button-next),
+.swiperContainer :global(.swiper-button-prev) {
+  color: #000;
+  background: rgba(255, 255, 255, 0.8);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.swiperContainer :global(.swiper-button-next:after),
+.swiperContainer :global(.swiper-button-prev:after) {
+  font-size: 16px;
+}
+
+.swiperContainer :global(.swiper-pagination-bullet) {
+  background: #000;
+  opacity: 0.5;
+}
+
+.swiperContainer :global(.swiper-pagination-bullet-active) {
+  opacity: 1;
 }
 
 .qnaSection{
@@ -366,7 +476,10 @@
   align-items: center;
   padding-top: 40px;
   padding-bottom: 40px;
-  background-color: #9cc4fb;
+  background-image: url('/background_image_footer.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 .qnaTitle{
   font-size: 1.5rem;
@@ -390,14 +503,244 @@
   gap: 5px;
 }
 
+/* 컨텐츠 아이템 컨테이너 - 두 컬럼 레이아웃 */
+.contentItemsContainer {
+  display: flex;
+  gap: 10px;
+  padding: 20px 40px;
+  background-color: #e8f4fd;
+  min-height: 400px;
+}
+
+.contentColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contentItemBubble {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contentItemImage {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.contentItemEmoji {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.contentItemText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contentItemTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #121212;
+  margin: 0;
+}
+
+.contentItemDescription {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.contentItemImages {
+  margin-top: 8px;
+}
+
+.contentItemSingleImage {
+  width: 100%;
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
 .qnaIcon{
-  width: 13px;
-  height: 13px;
-  margin-right: 5px;
-  margin-bottom: 5px;
+  width: 20px;
+  height: 20px;
+
   object-fit: contain;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Footer2 섹션 */
+.footer2Section {
+  padding: 40px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+    
+  gap: 24px;
+}
+
+.footer2Title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #121212;
+  
+  margin: 0;
+}
+
+.footer2Buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.footer2Button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.footer2Button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.footer2ButtonIcon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.footer2ButtonText {
+  white-space: nowrap;
+}
+
+.footer2ButtonKakao {
+  background-color: #FEE500;
+  color: #000000;
+}
+
+.footer2ButtonPhone {
+  background-color: #00BF16;
+}
+
+.footer2ButtonBlog {
+  background: linear-gradient(135deg, #00BF16 0%, #00D4FF 100%);
+}
+
+.footer2ButtonInstagram {
+  background: linear-gradient(135deg, #B445FF 0%, #FB01CE 12%, #FF0058 58%, #FFBC00 100%);
+}
+
+/* 공유하기 버튼 */
+.shareSection {
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  background-color: #f5f5f5;
+}
+
+.shareButton {
+  padding: 14px 32px;
+  background-color: #ffffff;
+  color: #333333;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.shareIcon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+/* 플로팅 메뉴 */
+.floatingMenu {
+  position: fixed;
+  right: calc(50vw - 236.5px + 20px);
+  top: 50vh;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  z-index: 1000;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: auto;
+}
+
+@media (max-width: 501px) {
+  .floatingMenu {
+    right: 20px;
+  }
+}
+
+.floatingKakaoButton,
+.floatingPhoneButton {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+}
+
+.floatingKakaoButton {
+  background-color: #FFDE00;
+}
+
+.floatingPhoneButton {
+  background-color: #00BF16;
+}
+
+.floatingKakaoButton:hover,
+.floatingPhoneButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.floatingButtonIcon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
 }
 
