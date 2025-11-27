@@ -33,6 +33,8 @@ export default function EditTemplatePage() {
   const heroImageInputRef = useRef<HTMLInputElement>(null);
   const footerImageInputRef = useRef<HTMLInputElement>(null);
   const contentImagesInputRef = useRef<HTMLInputElement>(null);
+  const footerItemImageInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+  const footerItemContentImagesInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -111,7 +113,7 @@ export default function EditTemplatePage() {
     init();
   }, [templateId, router]);
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'hero' | 'footer' | 'content') => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'hero' | 'footer' | 'content', itemId?: string) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
@@ -123,17 +125,54 @@ export default function EditTemplatePage() {
         // 여러 이미지 업로드
         const uploadPromises = Array.from(files).map(file => uploadImage(file, 'templates'));
         const urls = await Promise.all(uploadPromises);
-        setNewFooterItem({ ...newFooterItem, images: [...newFooterItem.images, ...urls] });
-        alert(`${urls.length}개의 이미지가 업로드되었습니다!`);
+        
+        if (itemId) {
+          // 기존 footer item에 이미지 추가
+          const item = template?.footerItems?.find(f => f.id === itemId);
+          if (item) {
+            const currentImages = item.images || [];
+            const newImages = [...currentImages, ...urls];
+            await updateFooterItem(itemId, {
+              images: newImages,
+            });
+            setTemplate({
+              ...template!,
+              footerItems: template!.footerItems?.map(f => 
+                f.id === itemId ? { ...f, images: newImages } : f
+              ) || [],
+            });
+            alert(`${urls.length}개의 이미지가 추가되었습니다!`);
+          }
+        } else {
+          // 새 footer item에 이미지 추가
+          setNewFooterItem({ ...newFooterItem, images: [...newFooterItem.images, ...urls] });
+          alert(`${urls.length}개의 이미지가 업로드되었습니다!`);
+        }
       } else {
         const file = files[0];
         const url = await uploadImage(file, 'templates');
         if (type === 'hero') {
           setFormData({ ...formData, heroImage: url });
+          alert('이미지가 업로드되었습니다!');
         } else if (type === 'footer') {
-          setNewFooterItem({ ...newFooterItem, image: url });
+          if (itemId) {
+            // 기존 footer item의 아이콘 이미지 변경
+            await updateFooterItem(itemId, {
+              image: url,
+            });
+            setTemplate({
+              ...template!,
+              footerItems: template!.footerItems?.map(f => 
+                f.id === itemId ? { ...f, image: url } : f
+              ) || [],
+            });
+            alert('아이콘 이미지가 변경되었습니다!');
+          } else {
+            // 새 footer item에 이미지 추가
+            setNewFooterItem({ ...newFooterItem, image: url });
+            alert('이미지가 업로드되었습니다!');
+          }
         }
-        alert('이미지가 업로드되었습니다!');
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : '이미지 업로드에 실패했습니다.';
@@ -960,62 +999,137 @@ export default function EditTemplatePage() {
                     {item.description && (
                       <p className="text-sm text-gray-600 mb-2">{item.description}</p>
                     )}
-                    {item.image && (
-                      <img src={item.image} alt={item.title} className="w-16 h-16 object-cover rounded mb-2" />
-                    )}
-                    {item.images && item.images.length > 0 && (
-                      <div className="flex flex-col gap-2 mt-2">
-                        {item.images.map((imgUrl, idx) => (
-                          <div key={idx} className="relative flex items-center gap-2 bg-gray-50 p-2 rounded-lg">
-                            <div className="flex flex-col gap-1">
-                              <button
-                                type="button"
-                                onClick={() => handleMoveImage(item.id, idx, 'up')}
-                                disabled={idx === 0}
-                                className="bg-blue-500 text-white rounded px-2 py-1 text-xs disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600"
-                              >
-                                ↑
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => handleMoveImage(item.id, idx, 'down')}
-                                disabled={idx === (item.images?.length || 0) - 1}
-                                className="bg-blue-500 text-white rounded px-2 py-1 text-xs disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600"
-                              >
-                                ↓
-                              </button>
-                            </div>
-                            <img src={imgUrl} alt={`${item.title} 이미지 ${idx + 1}`} className="w-16 h-16 object-cover rounded" />
-                            <span className="text-xs text-gray-500">순서: {idx + 1}</span>
+                    
+                    {/* 아이콘 이미지 변경 */}
+                    <div className="mb-3 space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">아이콘 이미지</label>
+                      <div className="flex gap-2 items-center">
+                        {item.image && (
+                          <img src={item.image} alt={item.title} className="w-16 h-16 object-cover rounded border border-gray-200" />
+                        )}
+                        <div className="flex gap-2">
+                          <input
+                            ref={(el) => {
+                              footerItemImageInputRefs.current[item.id] = el;
+                            }}
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleImageUpload(e, 'footer', item.id)}
+                            className="hidden"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => footerItemImageInputRefs.current[item.id]?.click()}
+                            disabled={uploading}
+                            className="rounded-lg border border-gray-300 px-3 py-1 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
+                          >
+                            {uploading ? '업로드 중...' : item.image ? '이미지 변경' : '이미지 업로드'}
+                          </button>
+                          {item.image && (
                             <button
                               type="button"
                               onClick={async () => {
-                                if (!confirm('이 이미지를 삭제하시겠습니까?') || !item.images) return;
+                                if (!confirm('아이콘 이미지를 제거하시겠습니까?')) return;
                                 try {
-                                  const newImages = item.images.filter((_, i) => i !== idx);
                                   await updateFooterItem(item.id, {
-                                    images: newImages.length > 0 ? newImages : undefined,
+                                    image: null,
                                   });
                                   setTemplate({
                                     ...template!,
                                     footerItems: template!.footerItems?.map(f => 
-                                      f.id === item.id 
-                                        ? { ...f, images: newImages.length > 0 ? newImages : null }
-                                        : f
+                                      f.id === item.id ? { ...f, image: null } : f
                                     ) || [],
                                   });
                                 } catch (err) {
-                                  setError(err instanceof Error ? err.message : '이미지 삭제에 실패했습니다.');
+                                  setError(err instanceof Error ? err.message : '이미지 제거에 실패했습니다.');
                                 }
                               }}
-                              className="ml-auto bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                              className="rounded-lg border border-red-300 px-3 py-1 text-xs font-medium text-red-700 transition-colors hover:bg-red-50"
                             >
-                              ×
+                              제거
                             </button>
-                          </div>
-                        ))}
+                          )}
+                        </div>
                       </div>
-                    )}
+                    </div>
+
+                    {/* 스와이프 이미지 관리 */}
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">스와이프 이미지</label>
+                      <div className="flex gap-2">
+                        <input
+                          ref={(el) => {
+                            footerItemContentImagesInputRefs.current[item.id] = el;
+                          }}
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          onChange={(e) => handleImageUpload(e, 'content', item.id)}
+                          className="hidden"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => footerItemContentImagesInputRefs.current[item.id]?.click()}
+                          disabled={uploading}
+                          className="rounded-lg border border-gray-300 px-3 py-1 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
+                        >
+                          {uploading ? '업로드 중...' : '이미지 추가'}
+                        </button>
+                      </div>
+                      {item.images && item.images.length > 0 && (
+                        <div className="flex flex-col gap-2 mt-2">
+                          {item.images.map((imgUrl, idx) => (
+                            <div key={idx} className="relative flex items-center gap-2 bg-gray-50 p-2 rounded-lg">
+                              <div className="flex flex-col gap-1">
+                                <button
+                                  type="button"
+                                  onClick={() => handleMoveImage(item.id, idx, 'up')}
+                                  disabled={idx === 0}
+                                  className="bg-blue-500 text-white rounded px-2 py-1 text-xs disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600"
+                                >
+                                  ↑
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMoveImage(item.id, idx, 'down')}
+                                  disabled={idx === (item.images?.length || 0) - 1}
+                                  className="bg-blue-500 text-white rounded px-2 py-1 text-xs disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600"
+                                >
+                                  ↓
+                                </button>
+                              </div>
+                              <img src={imgUrl} alt={`${item.title} 이미지 ${idx + 1}`} className="w-16 h-16 object-cover rounded" />
+                              <span className="text-xs text-gray-500">순서: {idx + 1}</span>
+                              <button
+                                type="button"
+                                onClick={async () => {
+                                  if (!confirm('이 이미지를 삭제하시겠습니까?') || !item.images) return;
+                                  try {
+                                    const newImages = item.images.filter((_, i) => i !== idx);
+                                    await updateFooterItem(item.id, {
+                                      images: newImages.length > 0 ? newImages : undefined,
+                                    });
+                                    setTemplate({
+                                      ...template!,
+                                      footerItems: template!.footerItems?.map(f => 
+                                        f.id === item.id 
+                                          ? { ...f, images: newImages.length > 0 ? newImages : null }
+                                          : f
+                                      ) || [],
+                                    });
+                                  } catch (err) {
+                                    setError(err instanceof Error ? err.message : '이미지 삭제에 실패했습니다.');
+                                  }
+                                }}
+                                className="ml-auto bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <button
                     onClick={() => handleDeleteFooterItem(item.id)}

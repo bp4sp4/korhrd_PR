@@ -145,21 +145,20 @@ export default function TemplateView({ template }: TemplateViewProps) {
                     <Swiper
                       spaceBetween={8}
                       slidesPerView={1.5}
-                      breakpoints={{
-                        320: {
-                          slidesPerView: 1,
-                          spaceBetween: 8,
-                        },
-                        417: {
-                          slidesPerView: 1.5,
-                          spaceBetween: 8,
-                        },
-                      }}
                       className={styles.swiperContainer}
                     >
                       {footerItem.images.map((imgUrl, idx) => (
                         <SwiperSlide key={idx}>
-                          <img src={imgUrl} alt={`${footerItem.title} ${idx + 1}`} className={styles.swiperImage} />
+                          <img 
+                            src={imgUrl} 
+                            alt={`${footerItem.title} ${idx + 1}`} 
+                            className={styles.swiperImage}
+                            onError={(e) => {
+                              console.error('이미지 로드 실패:', imgUrl);
+                              e.currentTarget.style.display = 'none';
+                            }}
+                            loading="lazy"
+                          />
                         </SwiperSlide>
                       ))}
                     </Swiper>

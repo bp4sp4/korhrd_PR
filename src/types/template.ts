@@ -112,11 +112,11 @@ export interface CreateSectionItemData {
 
 export interface CreateFooterItemData {
   templateId: string;
-  emoji?: string;
+  emoji?: string | null;
   title: string;
-  description?: string;
-  image?: string;
-  images?: string[];
+  description?: string | null;
+  image?: string | null;
+  images?: string[] | null;
   orderIndex?: number;
 }
 

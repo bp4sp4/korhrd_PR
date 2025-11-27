@@ -26,7 +26,7 @@
   flex-direction: column;
   margin: 0;
   width: 100%;
-  height: 550px;
+  height: 360px;
   box-sizing: border-box;
   
 }
@@ -443,6 +443,7 @@ color : #121212;
 
 .swiperImage{
   width: 100%;
+  max-width: 235px;
   height: 345px;
   object-fit: cover;
   border-radius: 10px;
