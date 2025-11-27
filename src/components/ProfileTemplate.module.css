@@ -445,7 +445,7 @@ color : #121212;
   width: 100%;
   max-width: 235px;
   height: 345px;
-  object-fit: cover;
+  
   border-radius: 10px;
   display: block;
 }
