@@ -75,7 +75,9 @@ export default function TemplateView({ template }: TemplateViewProps) {
             )}
             {template.phoneLink && (
               <a
-                href={template.phoneLink}
+                href={template.phoneLink.startsWith('tel:') 
+                  ? template.phoneLink 
+                  : `tel:${template.phoneLink.replace(/[\s-]/g, '')}`}
                 className={styles.phoneButton}
               >
                 <img src="/phone.png" alt="전화" className={styles.phoneIcon} />
@@ -208,31 +210,52 @@ export default function TemplateView({ template }: TemplateViewProps) {
             )}
             {template.footer2Buttons && template.footer2Buttons.length > 0 && (
               <div className={styles.footer2Buttons}>
-                {template.footer2Buttons.map((button, idx) => (
-                  <a
-                    key={idx}
-                    href={button.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`${styles.footer2Button} ${styles[`footer2Button${button.type.charAt(0).toUpperCase() + button.type.slice(1)}`]}`}
-                  >
-                    {button.type === 'kakao' && (
-                      <img src="/kakotalk.png" alt="카카오톡" className={styles.footer2ButtonIcon} />
-                    )}
-                    {button.type === 'phone' && (
-                      <img src="/phone.png" alt="전화" className={styles.footer2ButtonIcon} />
-                    )}
-                    {button.type === 'blog' && (
-                    <img src="/blog.png" alt="전화" className={styles.footer2ButtonIcon} />
-                    )}
-                    {button.type === 'instagram' && (
-                      <svg className={styles.footer2ButtonIcon} viewBox="0 0 24 24" fill="white">
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                      </svg>
-                    )}
-                    <span className={styles.footer2ButtonText}>{button.label}</span>
-                  </a>
-                ))}
+                {template.footer2Buttons.map((button, idx) => {
+                  // 전화 버튼의 경우 tel: 프로토콜 처리
+                  const getButtonUrl = () => {
+                    if (button.type === 'phone') {
+                      // 이미 tel:로 시작하면 그대로 사용
+                      if (button.url.startsWith('tel:')) {
+                        return button.url;
+                      }
+                      // 전화번호만 입력된 경우 tel: 추가
+                      // 하이픈, 공백 제거 후 tel: 추가
+                      const phoneNumber = button.url.replace(/[\s-]/g, '');
+                      return `tel:${phoneNumber}`;
+                    }
+                    return button.url;
+                  };
+
+                  // 전화 버튼은 새 창 열기 불필요
+                  const linkProps = button.type === 'phone' 
+                    ? {} 
+                    : { target: '_blank', rel: 'noopener noreferrer' };
+
+                  return (
+                    <a
+                      key={idx}
+                      href={getButtonUrl()}
+                      {...linkProps}
+                      className={`${styles.footer2Button} ${styles[`footer2Button${button.type.charAt(0).toUpperCase() + button.type.slice(1)}`]}`}
+                    >
+                      {button.type === 'kakao' && (
+                        <img src="/kakotalk.png" alt="카카오톡" className={styles.footer2ButtonIcon} />
+                      )}
+                      {button.type === 'phone' && (
+                        <img src="/phone.png" alt="전화" className={styles.footer2ButtonIcon} />
+                      )}
+                      {button.type === 'blog' && (
+                        <img src="/blog.png" alt="블로그" className={styles.footer2ButtonIcon} />
+                      )}
+                      {button.type === 'instagram' && (
+                        <svg className={styles.footer2ButtonIcon} viewBox="0 0 24 24" fill="white">
+                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                      )}
+                      <span className={styles.footer2ButtonText}>{button.label}</span>
+                    </a>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -277,7 +300,9 @@ export default function TemplateView({ template }: TemplateViewProps) {
           )}
           {template.phoneLink && (
             <a
-              href={template.phoneLink}
+              href={template.phoneLink.startsWith('tel:') 
+                ? template.phoneLink 
+                : `tel:${template.phoneLink.replace(/[\s-]/g, '')}`}
               className={styles.floatingPhoneButton}
             >
               <img src="/phone.png" alt="전화" className={styles.floatingButtonIcon} />
