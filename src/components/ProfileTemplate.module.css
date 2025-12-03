@@ -623,7 +623,7 @@ color : #121212;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   color: white;
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
@@ -636,7 +636,7 @@ color : #121212;
   width: 20px;
   height: 20px;
   object-fit: contain;
-  margin-right: 4px;
+  margin-right: 6px;
 }
 
 .footer2ButtonText {
@@ -685,8 +685,8 @@ color : #121212;
 }
 
 .shareIcon {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
 }
 
