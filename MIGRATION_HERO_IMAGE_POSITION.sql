@@ -3,3 +3,4 @@ ALTER TABLE profile_templates
 ADD COLUMN IF NOT EXISTS hero_image_position TEXT;
 
 
+
