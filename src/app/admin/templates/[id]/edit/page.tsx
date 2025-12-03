@@ -39,6 +39,7 @@ export default function EditTemplatePage() {
     name: '',
     description: '',
     heroImage: '',
+    heroImagePosition: 'center',
     kakaoLink: '',
     phoneLink: '',
     introMessage: '',
@@ -90,6 +91,7 @@ export default function EditTemplatePage() {
           name: fullTemplate.name,
           description: fullTemplate.description || '',
           heroImage: fullTemplate.heroImage || '',
+          heroImagePosition: fullTemplate.heroImagePosition || 'center',
           kakaoLink: fullTemplate.kakaoLink || '',
           phoneLink: fullTemplate.phoneLink || '',
           introMessage: fullTemplate.introMessage || '',
@@ -618,6 +620,32 @@ export default function EditTemplatePage() {
                 )}
               </div>
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">히어로 이미지 위치</label>
+              <select
+                value={formData.heroImagePosition}
+                onChange={(e) => setFormData({ ...formData, heroImagePosition: e.target.value })}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="center">중앙</option>
+                <option value="top">상단</option>
+                <option value="bottom">하단</option>
+                <option value="left">왼쪽</option>
+                <option value="right">오른쪽</option>
+                <option value="top left">왼쪽 상단</option>
+                <option value="top right">오른쪽 상단</option>
+                <option value="bottom left">왼쪽 하단</option>
+                <option value="bottom right">오른쪽 하단</option>
+                <option value="50% 30%">50% 30% (위쪽)</option>
+                <option value="50% 50%">50% 50% (중앙)</option>
+                <option value="50% 70%">50% 70% (아래쪽)</option>
+                <option value="50% 80%">50% 80% (더 아래)</option>
+                <option value="50% 90%">50% 90% (맨 아래)</option>
+              </select>
+              <p className="mt-1 text-xs text-gray-500">배경 이미지가 표시될 위치를 선택하세요</p>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">카카오톡 링크</label>
@@ -1158,6 +1186,7 @@ export default function EditTemplatePage() {
                       name: formData.name || template.name,
                       description: null,
                       heroImage: formData.heroImage || template.heroImage,
+                      heroImagePosition: formData.heroImagePosition || template.heroImagePosition,
                       kakaoLink: formData.kakaoLink || template.kakaoLink,
                       phoneLink: formData.phoneLink || template.phoneLink,
                       introMessage: formData.introMessage || template.introMessage,

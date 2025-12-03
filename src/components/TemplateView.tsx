@@ -15,6 +15,7 @@ export default function TemplateView({ template }: TemplateViewProps) {
         className={styles.header}
         style={template.heroImage ? {
           backgroundImage: `url(${template.heroImage})`,
+          backgroundPosition: template.heroImagePosition || 'center',
         } : undefined}
       >
      

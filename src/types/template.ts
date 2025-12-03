@@ -15,6 +15,7 @@ export interface ProfileTemplate {
   name: string;
   description: string | null;
   heroImage: string | null;
+  heroImagePosition: string | null;
   kakaoLink: string | null;
   phoneLink: string | null;
   introMessage: string | null;
@@ -68,6 +69,7 @@ export interface CreateTemplateData {
   name: string;
   description?: string;
   heroImage?: string;
+  heroImagePosition?: string;
   kakaoLink?: string;
   phoneLink?: string;
   introMessage?: string;
@@ -85,6 +87,7 @@ export interface UpdateTemplateData {
   name?: string;
   description?: string;
   heroImage?: string;
+  heroImagePosition?: string;
   kakaoLink?: string;
   phoneLink?: string;
   introMessage?: string;

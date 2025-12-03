@@ -46,6 +46,7 @@ function templateToProfileTemplate(template: any): ProfileTemplate {
     name: template.name,
     description: template.description,
     heroImage: template.hero_image,
+    heroImagePosition: template.hero_image_position || null,
     kakaoLink: template.kakao_link,
     phoneLink: template.phone_link,
     introMessage: template.intro_message || null,
@@ -266,6 +267,7 @@ export async function createTemplate(data: CreateTemplateData): Promise<ProfileT
       name: data.name,
       description: data.description || null,
       hero_image: data.heroImage || null,
+      hero_image_position: data.heroImagePosition || null,
       kakao_link: data.kakaoLink || null,
       phone_link: data.phoneLink || null,
       intro_message: data.introMessage || null,
@@ -305,6 +307,7 @@ export async function updateTemplate(
   if (data.name !== undefined) updateData.name = data.name;
   if (data.description !== undefined) updateData.description = data.description;
   if (data.heroImage !== undefined) updateData.hero_image = data.heroImage;
+  if (data.heroImagePosition !== undefined) updateData.hero_image_position = data.heroImagePosition;
   if (data.kakaoLink !== undefined) updateData.kakao_link = data.kakaoLink;
   if (data.phoneLink !== undefined) updateData.phone_link = data.phoneLink;
   if (data.introMessage !== undefined) updateData.intro_message = data.introMessage;
